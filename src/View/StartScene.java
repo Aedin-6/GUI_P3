@@ -1,19 +1,20 @@
 package View;
 
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
-public class StartStage extends Application
+public class StartScene extends Scene
 {
-    @Override
-    public void start(Stage primaryStage) throws Exception
+    Scene startScene;
+
+    public StartScene(Parent parent, double v, double v1)
     {
-        primaryStage.setTitle("Hello World!");
+        super(parent, v, v1);
+        StackPane root = new StackPane();;
         Button btn = new Button();
         btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -24,9 +25,13 @@ public class StartStage extends Application
             }
         });
 
-        StackPane root = new StackPane();
         root.getChildren().add(btn);
-        primaryStage.setScene(new Scene(root, 300, 250));
-        primaryStage.show();
+    }
+
+
+    public Scene GetScene()
+    {
+        return startScene;
     }
 }
+
