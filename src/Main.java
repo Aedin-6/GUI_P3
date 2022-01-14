@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -141,7 +142,7 @@ public class Main extends Application
         VBox root2 = new VBox(20, easy, medium, hard);
         root2.setAlignment(Pos.CENTER);
         root2.setStyle("-fx-background-color: transparent");
-        diffChoice = new Scene(root2, 400, 400, Color.rgb(43,120,33));
+        diffChoice = new Scene(root2, 200, 200, Color.rgb(43,120,33));
 
 
 
@@ -153,7 +154,9 @@ public class Main extends Application
                 difficulty = 0;
                 StackPane gameRoot = new StackPane();
                 StageSetter(stage);
-                GameScene gameScene = new GameScene(gameRoot, 1280, 656);
+                GameScene gameScene = new GameScene(gameRoot, 1280, 656, difficulty);
+                stage.setX(250);
+                stage.setY(150);
                 stage.setScene(gameScene);
             }
         });
@@ -181,7 +184,9 @@ public class Main extends Application
                 difficulty = 1;
                 StackPane gameRoot = new StackPane();
                 StageSetter(stage);
-                GameScene gameScene = new GameScene(gameRoot, 1280, 656);
+                stage.setX(250);
+                stage.setY(150);
+                GameScene gameScene = new GameScene(gameRoot, 1280, 656, difficulty);
                 stage.setScene(gameScene);
             }
         });
@@ -209,7 +214,9 @@ public class Main extends Application
                 difficulty = 2;
                 StackPane gameRoot = new StackPane();
                 StageSetter(stage);
-                GameScene gameScene = new GameScene(gameRoot, 1280, 656);
+                stage.setX(250);
+                stage.setY(150);
+                GameScene gameScene = new GameScene(gameRoot, 1280, 656, difficulty);
                 stage.setScene(gameScene);
             }
         });
@@ -248,13 +255,14 @@ public class Main extends Application
 
     private void StageSetter(Stage stage)
     {
-        //Image icon = new Image("duck.jpg");
-        //stage.getIcons().add(icon);
+        Image icon = new Image("duck.jpg");
+        stage.getIcons().add(icon);
         stage.setResizable(false);
         //stage.setFullScreen(true);
         stage.setFullScreenExitHint("Press Q to exit full screen");
         stage.setFullScreenExitKeyCombination(KeyCombination.valueOf("q"));
         stage.setTitle("Duck Hunter!");
+
     }
 
     public static void main(String[] args)

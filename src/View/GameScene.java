@@ -1,5 +1,6 @@
 package View;
 
+import GameModel.Start;
 import javafx.animation.FadeTransition;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -20,7 +21,8 @@ public class GameScene extends Scene
 {
     private Scene gameScene;
     private Text start;
-    public GameScene(StackPane gameRoot, int w , int h)
+    int difficulty;
+    public GameScene(StackPane gameRoot, int w , int h, int difficulty)
     {
         super(gameRoot, w, h);
         try
@@ -46,8 +48,11 @@ public class GameScene extends Scene
                 public void handle(MouseEvent mouseEvent)
                 {
                     System.out.println("Clicked!");
+                    Start gameSt = new Start();
+                    gameSt.startGame(difficulty, gameRoot);
                 }
             });
+
         }
         catch (FileNotFoundException e){};
     }

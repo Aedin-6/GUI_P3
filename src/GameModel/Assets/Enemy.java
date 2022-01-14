@@ -1,31 +1,39 @@
 package GameModel.Assets;
 
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
+
+import java.util.ArrayList;
 
 public class Enemy
 {
+    public static ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
     private String id = "e";
-    private Color color;
+    private int diff;
     private int lives;
+    private Rectangle view;
     private static int counter;
 
-    Enemy(Color color)
+    public Enemy(int diff)
     {
         id = id + counter;
-        GetColorDiff(color);
+        GetColorDiff(diff);
+
     }
 
-    private void GetColorDiff(Color color)
+    private void GetColorDiff(int diff)
     {
-        if (Color.RED.equals(color))
+        if (diff == 2)
         {
             lives = 15;
         }
-        else if (Color.GREEN.equals(color))
+        else if (diff == 0)
         {
             lives = 5;
         }
-        else if (Color.YELLOW.equals(color))
+        else if (diff == 1)
         {
             lives = 10;
         }
@@ -38,5 +46,15 @@ public class Enemy
     public void Clicked()
     {
         lives =-1;
+    }
+
+    public void AddView(Rectangle rectangle)
+    {
+        view = rectangle;
+    }
+
+    public Node GetView()
+    {
+        return view;
     }
 }
