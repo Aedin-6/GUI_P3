@@ -152,7 +152,7 @@ public class Main extends Application
             public void handle(MouseEvent mouseEvent)
             {
                 difficulty = 0;
-                StackPane gameRoot = new StackPane();
+                Pane gameRoot = new Pane();
                 StageSetter(stage);
                 GameScene gameScene = new GameScene(gameRoot, 1280, 656, difficulty);
                 stage.setX(250);

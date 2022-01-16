@@ -14,7 +14,7 @@ public class Player
         lives=-1;
     }
 
-    public void IncreaseScore(Color color)
+    public static void IncreaseScore(Color color)
     {
         if (Color.RED.equals(color))
         {

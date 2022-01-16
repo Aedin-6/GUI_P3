@@ -22,7 +22,7 @@ public class GameScene extends Scene
     private Scene gameScene;
     private Text start;
     int difficulty;
-    public GameScene(StackPane gameRoot, int w , int h, int difficulty)
+    public GameScene(Pane gameRoot, int w , int h, int difficulty)
     {
         super(gameRoot, w, h);
         try
@@ -38,6 +38,8 @@ public class GameScene extends Scene
             gameRoot.setBackground(bGround);
 
             start = new Text("GO!");
+            start.setX(gameRoot.getWidth()/2);
+            start.setY(gameRoot.getHeight()/2);
             start.setFont(Font.font("Arial", 72));
             start.setFill(Color.RED);
             start.setVisible(true);
