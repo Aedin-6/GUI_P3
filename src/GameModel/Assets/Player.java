@@ -1,13 +1,21 @@
 package GameModel.Assets;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class Player
 {
     private static int lives = 10;
     private static int score;
+    private String name;
 
-    Player(){};
+    public Player(){};
+
+    public Player(String name, String score)
+    {
+        this.name = name;
+
+    }
 
     public static void LoseLife()
     {
@@ -23,28 +31,29 @@ public class Player
         return lives;
     }
 
-    public void ReduceLives()
+    public static void IncreaseScore(Paint color)
     {
-        lives=-1;
+        if (Color.RED == color)
+        {
+            score = score + 15;
+        }
+        else if (Color.DEEPSKYBLUE == color)
+        {
+            score = score +5;
+        }
+        else if (Color.YELLOWGREEN == color)
+        {
+            score = score +10;
+        }
     }
 
-    public static void IncreaseScore(Color color)
+    public static void ClearScore()
     {
-        if (Color.RED.equals(color))
-        {
-            score += 15;
-        }
-        else if (Color.GREEN.equals(color))
-        {
-            score += 5;
-        }
-        else if (Color.YELLOW.equals(color))
-        {
-            score += 10;
-        }
-        else
-        {
-            score += 20;
-        }
+        score = 0;
+    }
+
+    public static void ClearLives()
+    {
+        lives = 10;
     }
 }

@@ -4,6 +4,7 @@ import GameModel.Assets.Player;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -27,11 +28,10 @@ public class Test extends Application
     @Override
     public void start(Stage stage)
     {
-         over = false;
-         pane = new Pane();
+        pane = new Pane();
         _scene = new Scene(pane,1200,600);
 
-
+        over = false;
         try
         {
             FileInputStream inputImg = new FileInputStream("forest.png");
@@ -78,9 +78,10 @@ public class Test extends Application
 
 
         Image kursor = new Image("kursor.png");
-        ImageCursor imgkur = new ImageCursor(kursor);
-        _scene.setCursor(imgkur);
+        ImageCursor cursor = new ImageCursor(kursor, kursor.getWidth()/2, kursor.getHeight()/2);
 
+
+        _scene.setCursor(cursor);
 
         stage.setResizable(false);
         stage.setScene(_scene);
@@ -90,14 +91,14 @@ public class Test extends Application
         {
         try {
             while (!over) {
-                Thread.sleep(10);
+                Thread.sleep(30);
                 Platform.runLater(() ->
                 {
                     updateEnemy();
                     updateBlocker();
                     score.setText("Score: " + Player.GetScore());
                     lives.setText("Lives: " + Player.GetLives());
-                    if(Player.GetLives() <= 0 && !isOver())
+                    if(Player.GetLives() <= 0 && !isOver() || ifAllKilled())
                     {
                         GameOver();
                     }
@@ -110,6 +111,20 @@ public class Test extends Application
 
         th = new Thread(neww);
         th.start();
+    }
+
+    private boolean ifAllKilled()
+    {
+        boolean allDead = false;
+        int counter=0;
+        for (Enemy en: Enemy.enemyList)
+        {
+            if(en.CheckDead())
+                counter++;
+        }
+        if (counter == Enemy.enemyList.size())
+            allDead = true;
+        return allDead;
     }
 
     private boolean isOver()
@@ -143,13 +158,6 @@ public class Test extends Application
         for (Obstacle o: Obstacle.obstacleList)
         {
             o.GetView().setCenterY(o.GetView().getCenterY()+1);
-            int rand =((int) (Math.random()*10));
-            int changer;
-            if(rand > 5)
-                changer = 2;
-            else
-                changer = -2;
-            //c.setCenterX(c.getCenterX()+changer);
             if(o.GetView().getCenterY()-o.GetView().getRadius() > _scene.getHeight())
                 o.GetView().setCenterY((int)(Math.random()*(-_scene.getHeight())));
         }

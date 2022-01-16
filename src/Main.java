@@ -1,15 +1,17 @@
 import View.GameScene;
+import View.ScoresScene;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -18,15 +20,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.management.monitor.MonitorSettingException;
-import java.io.FileNotFoundException;
-
 public class Main extends Application
 {
     Scene menuScene;
     Scene diffChoice;
     Scene gameScene;
     Scene scoreScene;
+    public static Stage stage;
     int difficulty;
     @Override
     public void start(Stage stage) throws Exception
@@ -38,13 +38,6 @@ public class Main extends Application
         scoreBtn.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 34));
         Text exitBtn = new Text("Exit");
         exitBtn.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 34));
-
-
-        //scoreBtn.setStyle("-fx-pref-width: 130px");
-        //startBtn.setStyle("-fx-pref-width: 130px");
-        //exitBtn.setStyle("-fx-pref-width: 130px");
-
-
 
         VBox root = new VBox(20,startBtn, scoreBtn, exitBtn);
         root.setAlignment(Pos.CENTER);
@@ -84,8 +77,10 @@ public class Main extends Application
             @Override
             public void handle(MouseEvent mouseEvent)
             {
+                Group scorePane = new Group();
+                ScoresScene scoresScene = new ScoresScene(scorePane, 300,500);
                 StageSetter(stage);
-                stage.setScene(scoreScene);
+                stage.setScene(scoresScene);
             }
         });
         scoreBtn.setOnMouseEntered(new EventHandler<MouseEvent>()
@@ -154,7 +149,7 @@ public class Main extends Application
                 difficulty = 0;
                 Pane gameRoot = new Pane();
                 StageSetter(stage);
-                GameScene gameScene = new GameScene(gameRoot, 1280, 656, difficulty);
+                GameScene gameScene = new GameScene(gameRoot, 1200, 600, difficulty, stage, menuScene);
                 stage.setX(250);
                 stage.setY(150);
                 stage.setScene(gameScene);
@@ -181,13 +176,15 @@ public class Main extends Application
             @Override
             public void handle(MouseEvent mouseEvent)
             {
+
                 difficulty = 1;
-                StackPane gameRoot = new StackPane();
+                Pane gameRoot = new Pane();
                 StageSetter(stage);
+                GameScene gameScene = new GameScene(gameRoot, 1200, 600, difficulty, stage, menuScene);
                 stage.setX(250);
                 stage.setY(150);
-                GameScene gameScene = new GameScene(gameRoot, 1280, 656, difficulty);
                 stage.setScene(gameScene);
+
             }
         });
         medium.setOnMouseEntered(new EventHandler<MouseEvent>()
@@ -212,11 +209,11 @@ public class Main extends Application
             public void handle(MouseEvent mouseEvent)
             {
                 difficulty = 2;
-                StackPane gameRoot = new StackPane();
+                Pane gameRoot = new Pane();
                 StageSetter(stage);
+                GameScene gameScene = new GameScene(gameRoot, 1200, 600, difficulty, stage, menuScene);
                 stage.setX(250);
                 stage.setY(150);
-                GameScene gameScene = new GameScene(gameRoot, 1280, 656, difficulty);
                 stage.setScene(gameScene);
             }
         });
@@ -238,6 +235,12 @@ public class Main extends Application
         });
 
 
+        stage.setOnCloseRequest(t ->
+        {
+            Platform.exit();
+            System.exit(0);
+        });
+
         StageSetter(stage);
         stage.setScene(menuScene);
         stage.show();
@@ -258,9 +261,6 @@ public class Main extends Application
         Image icon = new Image("duck.jpg");
         stage.getIcons().add(icon);
         stage.setResizable(false);
-        //stage.setFullScreen(true);
-        stage.setFullScreenExitHint("Press Q to exit full screen");
-        stage.setFullScreenExitKeyCombination(KeyCombination.valueOf("q"));
         stage.setTitle("Duck Hunter!");
 
     }
@@ -270,5 +270,4 @@ public class Main extends Application
         //launch(args);
         launch();
     }
-
 }

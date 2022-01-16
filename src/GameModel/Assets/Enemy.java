@@ -21,15 +21,15 @@ public class Enemy
     private Rectangle view;
     private static int counter;
     private boolean isDead;
+    private Color color;
 
     public Enemy(int diff)
     {
         id = id + counter;
-        GetColorDiff(diff);
         isDead = false;
         view = AddView();
+        GetColorDiff(diff);
         Clicked();
-
     }
 
 
@@ -38,20 +38,21 @@ public class Enemy
         if (diff == 2)
         {
             lives = 15;
+            view.setFill(Color.RED);
+            color = Color.RED;
         }
         else if (diff == 0)
         {
             lives = 5;
+            view.setFill(Color.DEEPSKYBLUE);
+            color = Color.DEEPSKYBLUE;
         }
         else if (diff == 1)
         {
             lives = 10;
+            view.setFill(Color.YELLOWGREEN);
+            color = Color.YELLOWGREEN;
         }
-        else
-        {
-            lives = 20;
-        }
-
     }
 
     public Rectangle AddView()
@@ -105,8 +106,8 @@ public class Enemy
     public void Destroy()
     {
 
-        Player.IncreaseScore((Color) view.getFill());
-        isDead = true;
+        Player.IncreaseScore(color);
+        Kill();
         view.setVisible(false);
         view.setHeight(1);
         view.setWidth(1);
