@@ -5,6 +5,7 @@ import GameModel.Assets.Obstacle;
 import GameModel.Assets.Player;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -161,8 +162,8 @@ public class GameScene extends Scene
             @Override
             public void handle(MouseEvent mouseEvent)
             {
-                Pane scorePane = new Pane();
-                ScoresScene scoresScene = new ScoresScene(scorePane, 300,300);
+                Group scorePane = new Group();
+                ScoresScene scoresScene = new ScoresScene(scorePane, 300,500);
                 Image icon = new Image("duck.jpg");
                 stage.getIcons().add(icon);
                 stage.setResizable(false);

@@ -11,11 +11,6 @@ public class Player
 
     public Player(){};
 
-    public Player(String name, String score)
-    {
-        this.name = name;
-
-    }
 
     public static void LoseLife()
     {
