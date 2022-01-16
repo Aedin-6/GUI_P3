@@ -54,7 +54,7 @@ public class EnemiesHandler implements Runnable
                     else
                         pos = Pos.TOP_RIGHT;
 
-                    Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
+                  //  Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
 
                     sleep(5000);
                     StackPane.setAlignment(Enemy.enemyList.get(i).GetView(), pos);
@@ -75,7 +75,7 @@ public class EnemiesHandler implements Runnable
                     else
                         pos = Pos.TOP_RIGHT;
 
-                    Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
+                   // Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
                     sleep(5000);
                     StackPane.setAlignment(Enemy.enemyList.get(i).GetView(), pos);
                     stage.getChildren().add(Enemy.enemyList.get(i).GetView());
@@ -95,7 +95,7 @@ public class EnemiesHandler implements Runnable
 
                 for(int i = 0; i < 40; i++)
                 {
-                    Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
+                  //  Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
 
                     sleep(5000);
                     StackPane.setAlignment(Enemy.enemyList.get(i).GetView(), pos);

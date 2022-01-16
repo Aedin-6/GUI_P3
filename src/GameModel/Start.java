@@ -67,7 +67,7 @@ public class Start
                     else
                         pos = Pos.TOP_LEFT;
 
-                    Enemy.enemyList.add(new Enemy(diff, stage,(int)(Math.random() * stage.getHeight()), 0));
+                    //Enemy.enemyList.add(new Enemy(diff, stage,(int)(Math.random() * stage.getHeight()), 0));
                     //sleep(5000);
                     //StackPane.setAlignment(Enemy.enemyList.get(i).GetView(), pos);
                     stage.getChildren().add(Enemy.enemyList.get(i).GetView());
@@ -89,7 +89,7 @@ public class Start
                     else
                         pos = Pos.TOP_LEFT;
 
-                    Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
+                  //  Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
                     //sleep(5000);
                     //StackPane.setAlignment(Enemy.enemyList.get(i).GetView(), pos);
                     stage.getChildren().add(Enemy.enemyList.get(i).GetView());
@@ -110,7 +110,7 @@ public class Start
                     else
                         pos = Pos.TOP_LEFT;
 
-                    Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
+                   // Enemy.enemyList.add(new Enemy(diff, stage, 0, (int)(Math.random() * stage.getHeight())));
 
                     stage.getChildren().add(Enemy.enemyList.get(i).GetView());
                 }

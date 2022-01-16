@@ -4,10 +4,24 @@ import javafx.scene.paint.Color;
 
 public class Player
 {
-    private int lives = 10;
+    private static int lives = 10;
     private static int score;
 
     Player(){};
+
+    public static void LoseLife()
+    {
+        lives = lives - 1;
+    }
+
+    public static int GetScore()
+    {
+        return score;
+    }
+    public static int GetLives()
+    {
+        return lives;
+    }
 
     public void ReduceLives()
     {

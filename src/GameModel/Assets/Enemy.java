@@ -1,18 +1,15 @@
 package GameModel.Assets;
 
-import javafx.animation.PathTransition;
+import javafx.animation.*;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class Enemy
@@ -23,75 +20,18 @@ public class Enemy
     private int lives;
     private Rectangle view;
     private static int counter;
-    private PathTransition pathTransition;
-    private int height;
-    private int width;
+    private boolean isDead;
 
-    public Enemy(int diff, Pane stage, int y, int x)
+    public Enemy(int diff)
     {
         id = id + counter;
         GetColorDiff(diff);
-        view = CreateEnemyView();
-        pathTransition = GeneratePath(stage);
-        this.height = y;
-        this.width = x;
+        isDead = false;
+        view = AddView();
+        Clicked();
 
     }
 
-    private PathTransition GeneratePath(Pane stage)
-    {
-        PathTransition pathTransition = new PathTransition(Duration.seconds(10), (Shape) GetView());
-        Path path = new Path();
-        path.getElements().add(new MoveTo(stage.getWidth()/3, 0));
-        path.getElements().add(new LineTo(stage.getWidth(), (Math.random() * stage.getHeight())));
-        path.getElements().add(new MoveTo((stage.getWidth()/3)*2, 0));
-        path.getElements().add(new LineTo(stage.getWidth(), (Math.random() * stage.getHeight())));
-        path.getElements().add(new MoveTo(stage.getWidth(), 0));
-        path.getElements().add(new LineTo(stage.getWidth(), (Math.random() * stage.getHeight())));
-        pathTransition.setNode(GetView());
-        pathTransition.setPath(path);
-        pathTransition.play();
-
-        return pathTransition;
-    }
-
-    private Rectangle CreateEnemyView()
-    {
-
-        Image bird = null;
-        try
-        {
-            FileInputStream inputstream = new FileInputStream("bird2.png");
-            bird = new Image(inputstream);
-        }
-        catch (Exception ex) {
-            System.out.println(ex);
-        }
-                ImagePattern pattern = new ImagePattern(bird, 20, 20, 40, 40, false);
-
-
-        Rectangle rectangle = new Rectangle(5,5);
-        rectangle.setWidth(40);
-        rectangle.setHeight(40);
-        rectangle.setFill(pattern);
-        rectangle.setStroke(Color.DARKGREEN);
-        rectangle.setStrokeWidth(5);
-        rectangle.setArcHeight(30);
-        rectangle.setArcWidth(30);
-
-
-
-        rectangle.setFill(Color.RED);
-
-        rectangle.setOnMouseClicked(mouseEvent ->
-        {
-            //rectangle.setFill(Color.rgb((int) (Math.random() * 255),(int) (Math.random() * 255),(int) (Math.random() * 255)));
-            Cliecked();
-            if(CheckDestroy())
-                Destroy();
-        });
-        return rectangle;
-    }
 
     private void GetColorDiff(int diff)
     {
@@ -114,15 +54,48 @@ public class Enemy
 
     }
 
+    public Rectangle AddView()
+    {
+        Rectangle rect = new Rectangle();
+        rect.setWidth(30);
+        rect.setHeight(30);
+        rect.setFill(Color.DEEPSKYBLUE);
+        rect.setX((int)(Math.random()*(-1200)));
+        rect.setY((int)(Math.random()*600));
+        rect.setRotate((int)(Math.random()*360));
+        rect.setStroke(Color.SKYBLUE);
+        rect.setStrokeWidth(5);
+        rect.setArcHeight(5);
+        rect.setArcWidth(5);
+        rect.toFront();
+        return rect;
+    }
 
-    public Node GetView()
+    public Rectangle GetView()
     {
         return view;
     }
 
-    public void Cliecked()
+    public void Clicked()
     {
-        lives= lives -1;
+        view.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent mouseEvent)
+            {
+                lives= lives -1;
+                view.setFill(Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255)));
+                FadeTransition _fadeTransition = new FadeTransition(Duration.seconds(0.2), view);
+                _fadeTransition.setFromValue(1.0);
+                _fadeTransition.setToValue(0.0);
+                _fadeTransition.setAutoReverse(true);
+                _fadeTransition.setCycleCount(2);
+                _fadeTransition.play();
+                if(CheckDestroy())
+                    Destroy();
+            }
+        });
+
     }
      public boolean CheckDestroy()
      {
@@ -131,12 +104,21 @@ public class Enemy
 
     public void Destroy()
     {
-        /*
-        Player.IncreaseScore((Color) view.getFill());
-        this.view.setVisible(false);
-        this.view.setHeight(1);
-        this.view.setWidth(1);
 
-         */
+        Player.IncreaseScore((Color) view.getFill());
+        isDead = true;
+        view.setVisible(false);
+        view.setHeight(1);
+        view.setWidth(1);
+    }
+
+    public boolean CheckDead()
+    {
+        return isDead;
+    }
+
+    public void Kill()
+    {
+        isDead = true;
     }
 }
