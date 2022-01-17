@@ -163,7 +163,7 @@ public class GameScene extends Scene
             public void handle(MouseEvent mouseEvent)
             {
                 Group scorePane = new Group();
-                ScoresScene scoresScene = new ScoresScene(scorePane, 300,500);
+                ScoresScene scoresScene = new ScoresScene(scorePane, 300,500, true);
                 Image icon = new Image("duck.jpg");
                 stage.getIcons().add(icon);
                 stage.setResizable(false);

@@ -6,7 +6,7 @@ import javafx.scene.paint.Paint;
 public class Player
 {
     private static int lives = 10;
-    private static int score;
+    private static int score = 0;
     private String name;
 
     public Player(){};

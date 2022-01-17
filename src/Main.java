@@ -1,3 +1,6 @@
+import GameModel.Assets.Enemy;
+import GameModel.Assets.Obstacle;
+import GameModel.Assets.Player;
 import View.GameScene;
 import View.ScoresScene;
 import javafx.animation.FadeTransition;
@@ -20,6 +23,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+
 public class Main extends Application
 {
     Scene menuScene;
@@ -28,6 +33,8 @@ public class Main extends Application
     Scene scoreScene;
     public static Stage stage;
     int difficulty;
+    boolean over;
+    ArrayList<Enemy> enemyMenuList = new ArrayList<>();
     @Override
     public void start(Stage stage) throws Exception
     {
@@ -42,8 +49,11 @@ public class Main extends Application
         VBox root = new VBox(20,startBtn, scoreBtn, exitBtn);
         root.setAlignment(Pos.CENTER);
         root.setStyle("-fx-background-color: transparent");
+        root.setTranslateX(100);
+        root.setTranslateY(100);
 
-        menuScene = new Scene(root, 400, 400, Color.rgb(148,197,33));
+
+
 
 
         startBtn.setOnMouseClicked(new EventHandler<MouseEvent>()
@@ -52,6 +62,7 @@ public class Main extends Application
             public void handle(MouseEvent mouseEvent)
             {
                 stage.setScene(diffChoice);
+                over = true;
                 //StageSetter(stage);
 
             }
@@ -78,7 +89,8 @@ public class Main extends Application
             public void handle(MouseEvent mouseEvent)
             {
                 Group scorePane = new Group();
-                ScoresScene scoresScene = new ScoresScene(scorePane, 300,500);
+                ScoresScene scoresScene = new ScoresScene(scorePane, 300,500, false);
+                over = true;
                 StageSetter(stage);
                 stage.setScene(scoresScene);
             }
@@ -127,17 +139,16 @@ public class Main extends Application
         //Difficulty Choice Menu
 
         Text easy = new Text("Easy");
-        easy.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 24));
+        easy.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 30));
         Text medium = new Text("Medium");
-        medium.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 24));
+        medium.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 30));
         Text hard = new Text("Hard");
-        hard.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 24));
+        hard.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 30));
 
 
         VBox root2 = new VBox(20, easy, medium, hard);
         root2.setAlignment(Pos.CENTER);
-        root2.setStyle("-fx-background-color: transparent");
-        diffChoice = new Scene(root2, 200, 200, Color.rgb(43,120,33));
+        diffChoice = new Scene(root2, 300, 300, Color.GREENYELLOW);
 
 
 
@@ -241,19 +252,55 @@ public class Main extends Application
             System.exit(0);
         });
 
+        Pane pane = new Pane();
+        pane.toBack();
+        pane.getChildren().add(root);
+        menuScene = new Scene(pane, 400, 400, Color.rgb(148,197,33));
+
+        for (int i = 0; i <30; i++)
+        {
+            Enemy _enemy = new Enemy(true);
+            pane.getChildren().add(_enemy.GetView());
+            enemyMenuList.add(_enemy);
+        }
+
+        Runnable neww = () ->
+        {
+            try {
+                while (!over) {
+                    Thread.sleep(20);
+                    Platform.runLater(() ->
+                    {
+                        updateMenu();
+                    });
+                }
+            } catch (InterruptedException ex) {
+                System.out.println("Interrupted");
+            }
+        };
+
+        Thread _thread = new Thread(neww);
+        _thread.start();
+
+
+
         StageSetter(stage);
         stage.setScene(menuScene);
         stage.show();
 
     }
 
-    private void StartTrans(Text text)
+    private void updateMenu()
     {
-        FadeTransition ft = new FadeTransition(Duration.millis(2000), text);
-        ft.setFromValue(1.0);
-        ft.setToValue(0.0);
-        ft.play();
+        for (Enemy e: enemyMenuList)
+        {
+            e.GetView().setY(e.GetView().getY()+1);
+            e.GetView().setOpacity(0.5);
+            if(e.GetView().getY()-e.GetView().getHeight() > menuScene.getHeight())
+                e.GetView().setY((int)(Math.random()*(-menuScene.getHeight())));
+        }
     }
+
 
 
     private void StageSetter(Stage stage)

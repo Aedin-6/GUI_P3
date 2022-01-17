@@ -31,6 +31,13 @@ public class Enemy
         GetColorDiff(diff);
         Clicked();
     }
+    public Enemy(boolean menu)
+    {
+        id = id + "m" + counter;
+        view = AddMenuView();
+        view.setMouseTransparent(true);
+        view.setFill(Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255)));
+    }
 
 
     private void GetColorDiff(int diff)
@@ -62,6 +69,23 @@ public class Enemy
         rect.setHeight(30);
         rect.setFill(Color.DEEPSKYBLUE);
         rect.setX((int)(Math.random()*(-1200)));
+        rect.setY((int)(Math.random()*600));
+        rect.setRotate((int)(Math.random()*360));
+        rect.setStroke(Color.SKYBLUE);
+        rect.setStrokeWidth(5);
+        rect.setArcHeight(5);
+        rect.setArcWidth(5);
+        rect.toFront();
+        return rect;
+    }
+
+    public Rectangle AddMenuView()
+    {
+        Rectangle rect = new Rectangle();
+        rect.setWidth(30);
+        rect.setHeight(30);
+        rect.setFill(Color.DEEPSKYBLUE);
+        rect.setX((int)(Math.random()*400));
         rect.setY((int)(Math.random()*600));
         rect.setRotate((int)(Math.random()*360));
         rect.setStroke(Color.SKYBLUE);
