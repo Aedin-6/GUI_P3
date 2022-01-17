@@ -56,6 +56,8 @@ public class ScoresScene extends Scene implements Serializable
 
         TextField addNickname = new TextField();
         addNickname.setPromptText("Nickname");
+        if(!isSave)
+            addNickname.setDisable(true);
         addNickname.setMaxWidth(nickname.getPrefWidth());
         Label addScore = new Label();
         addScore.setMaxWidth(score.getPrefWidth());
