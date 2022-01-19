@@ -36,6 +36,11 @@ public class ScoresScene extends Scene implements Serializable
         {
             Load();
         }
+        else
+        {
+            ArrayList<Scores> list = new ArrayList<Scores>();
+            scores = FXCollections.observableList(list);
+        }
         table.setEditable(true);
 
         TableColumn nickname = new TableColumn("Nickname");
@@ -75,12 +80,16 @@ public class ScoresScene extends Scene implements Serializable
         });
 
         Button saveAndExitBtn = new Button("Save & Exit");
-        saveAndExitBtn.setOnAction(e ->
+        if(!isSave)
+            saveAndExitBtn.setText("Exit");
+            saveAndExitBtn.setOnAction(e ->
         {
-            SaveScores();
+            if(isSave)
+            {
+                SaveScores();
+            }
             Platform.exit();
             System.exit(0);
-            //addScore.clear();
         });
 
         hBox.getChildren().addAll(addNickname, addScore, addBtn, saveAndExitBtn);
@@ -100,7 +109,7 @@ public class ScoresScene extends Scene implements Serializable
         {
             FileOutputStream fos = new FileOutputStream("ScoreBoard");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(new ArrayList<Scores>(scores));
+            oos.writeObject(new ArrayList<>(scores));
             oos.close();
         }
         catch (Exception e)
