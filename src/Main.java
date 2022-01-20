@@ -1,37 +1,51 @@
 import GameModel.Assets.Enemy;
+import GameModel.Assets.Obstacle;
+import GameModel.Assets.Player;
 import View.GameScene;
 import View.ScoresScene;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class Main extends Application
 {
     Scene menuScene;
     Scene diffChoice;
-    Scene gameScene;
-    Scene scoreScene;
-    public static Stage stage;
+    Pane pane;
+    Pane diffPane;
+    ImageView imageView;
     int difficulty;
     boolean over;
+    boolean soundOn;
+    Image soundImage;
+    MediaPlayer bgMusicPlayer;
     ArrayList<Enemy> enemyMenuList = new ArrayList<>();
+    ArrayList<Obstacle> menuBlockerList = new ArrayList<>();
     @Override
     public void start(Stage stage)
     {
         //Menu Scene
+
         Text startBtn = new Text("Start New Game");
         startBtn.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 34));
         Text scoreBtn = new Text("High Scores");
@@ -41,24 +55,22 @@ public class Main extends Application
 
         VBox root = new VBox(20,startBtn, scoreBtn, exitBtn);
         root.setAlignment(Pos.CENTER);
-        root.setStyle("-fx-background-color: transparent");
+
+       imageView = VolumeIcon();
+
+
+
         root.setTranslateX(100);
         root.setTranslateY(100);
 
 
-        startBtn.setOnMouseClicked(mouseEvent ->
-        {
-            stage.setScene(diffChoice);
-            over = true;
-            //StageSetter(stage);
-
-        });
+        startBtn.setOnMouseClicked(mouseEvent -> stage.setScene(diffChoice));
         startBtn.setOnMouseEntered(mouseEvent -> startBtn.setFill(Color.RED));
         startBtn.setOnMouseExited(mouseEvent -> startBtn.setFill(Color.BLACK));
         scoreBtn.setOnMouseClicked(mouseEvent ->
         {
             Group scorePane = new Group();
-            ScoresScene scoresScene = new ScoresScene(scorePane, 300,500, false);
+            ScoresScene scoresScene = new ScoresScene(scorePane, 325,500, false);
             over = true;
             StageSetter(stage);
             stage.setScene(scoresScene);
@@ -77,19 +89,24 @@ public class Main extends Application
         medium.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 30));
         Text hard = new Text("Hard");
         hard.setFont(Font.font("Impact",FontWeight.BOLD, FontPosture.REGULAR, 30));
-
-
         VBox root2 = new VBox(20, easy, medium, hard);
         root2.setAlignment(Pos.CENTER);
-        diffChoice = new Scene(root2, 300, 300, Color.GREENYELLOW);
-
-
+        root2.setLayoutX(100);
+        root2.setLayoutY(70);
+        diffPane = new Pane(imageView);
+        diffPane.getChildren().add(root2);
+        diffChoice = new Scene(diffPane, 300, 300);
+        diffChoice.setFill(Color.GREEN);
+        GenerateDiffChoiceEnem();
+        DiffMenuThread();
 
 
         easy.setOnMouseClicked(mouseEvent ->
         {
             difficulty = 0;
-            Pane gameRoot = new Pane();
+            new Player(difficulty);
+            over = true;
+            Pane gameRoot = new Pane(imageView);
             StageSetter(stage);
             GameScene gameScene = new GameScene(gameRoot, 1200, 600, difficulty, stage, menuScene);
             stage.setX(250);
@@ -101,7 +118,9 @@ public class Main extends Application
         medium.setOnMouseClicked(mouseEvent ->
         {
             difficulty = 1;
-            Pane gameRoot = new Pane();
+            new Player(difficulty);
+            over = true;
+            Pane gameRoot = new Pane(imageView);
             StageSetter(stage);
             GameScene gameScene = new GameScene(gameRoot, 1200, 600, difficulty, stage, menuScene);
             stage.setX(250);
@@ -114,7 +133,9 @@ public class Main extends Application
         hard.setOnMouseClicked(mouseEvent ->
         {
             difficulty = 2;
-            Pane gameRoot = new Pane();
+            new Player(difficulty);
+            over = true;
+            Pane gameRoot = new Pane(imageView);
             StageSetter(stage);
             GameScene gameScene = new GameScene(gameRoot, 1200, 600, difficulty, stage, menuScene);
             stage.setX(250);
@@ -130,21 +151,68 @@ public class Main extends Application
             System.exit(0);
         });
 
-        Pane pane = new Pane();
+        pane = new Pane(imageView);
         pane.getChildren().add(root);
         menuScene = new Scene(pane, 400, 400, Color.rgb(148,197,33));
+        GenerateMenuEnemies();
+        MenuThread();
 
-        for (int i = 0; i <30; i++)
-        {
-            Enemy _enemy = new Enemy(true);
-            pane.getChildren().add(_enemy.GetView());
-            enemyMenuList.add(_enemy);
-        }
+        SetOnMusicPlayer();
 
-        Runnable neww = () ->
+        StageSetter(stage);
+        stage.setScene(menuScene);
+        stage.show();
+
+    }
+
+    private ImageView VolumeIcon()
+    {
+        soundImage = new Image("soundon.jpg");
+        ImageView imageView = new ImageView(soundImage);
+        imageView.setX(0);
+        imageView.setY(0);
+        imageView.setFitHeight(25);
+        imageView.setFitWidth(25);
+        imageView.setPreserveRatio(true);
+        imageView.setOpacity(0.5);
+        imageView.toFront();
+        imageView.setOnMouseClicked(mouseEvent ->
         {
-            try {
-                while (!over) {
+            if(soundOn)
+            {
+                bgMusicPlayer.setVolume(0.0);
+                imageView.setImage(new Image("soundoff.jpg"));
+                soundOn = false;
+            }
+            else
+            {
+                bgMusicPlayer.setVolume(0.7);
+                imageView.setImage(new Image("soundon.jpg"));
+                soundOn = true;
+            }
+        });
+
+        return imageView;
+    }
+
+    private void SetOnMusicPlayer()
+    {
+        Media bgMusic = new Media(getClass().getResource("backgroundMusic.mp3").toExternalForm());
+        bgMusicPlayer = new MediaPlayer(bgMusic);
+        bgMusicPlayer.setAutoPlay(true);
+        bgMusicPlayer.setOnRepeat(() -> bgMusicPlayer.seek(Duration.ZERO));
+        bgMusicPlayer.setVolume(0.7);
+        soundOn = true;
+    }
+
+    private void MenuThread()
+    {
+        Runnable menuRun = () ->
+        {
+            try
+            {
+                while (!over)
+                {
                     Thread.sleep(20);
                     Platform.runLater(() ->
                             updateMenu(menuScene));
@@ -154,15 +222,48 @@ public class Main extends Application
             }
         };
 
-        Thread _thread = new Thread(neww);
+        Thread _thread = new Thread(menuRun);
         _thread.start();
+    }
+    private void DiffMenuThread()
+    {
+        Runnable diffMenuRun = () ->
+        {
+            try
+            {
+                while (!over)
+                {
+                    Thread.sleep(20);
+                    Platform.runLater(() ->
+                            updateDiffMenu(menuScene));
+                }
+            } catch (InterruptedException ex) {
+                System.out.println("Interrupted");
+            }
+        };
 
+        Thread _threadMenu = new Thread(diffMenuRun);
+        _threadMenu.start();
+    }
 
+    private void GenerateMenuEnemies()
+    {
+        for (int i = 0; i <30; i++)
+        {
+            Enemy _enemy = new Enemy(true);
+            pane.getChildren().add(_enemy.GetView());
+            enemyMenuList.add(_enemy);
+        }
+    }
 
-        StageSetter(stage);
-        stage.setScene(menuScene);
-        stage.show();
-
+    private void GenerateDiffChoiceEnem()
+    {
+        for (int i = 0 ; i<30; i++)
+        {
+            Obstacle _obstacle = new Obstacle(true);
+            diffPane.getChildren().add(_obstacle.GetView());
+            menuBlockerList.add(_obstacle);
+        }
     }
 
     private void updateMenu(Scene scene)
@@ -176,19 +277,31 @@ public class Main extends Application
         }
     }
 
+    private void updateDiffMenu(Scene scene)
+    {
+        for (Obstacle o: menuBlockerList)
+        {
+            o.GetView().setCenterX(o.GetView().getCenterX()+1);
+            o.GetView().setOpacity(0.6);
+            if(o.GetView().getCenterX()-o.GetView().getRadius() > scene.getWidth())
+                o.GetView().setCenterX(0);
+        }
+    }
+
 
 
     private void StageSetter(Stage stage)
     {
-        Image icon = new Image("duck.jpg");
+        Image icon = new Image("square.jpg");
         stage.getIcons().add(icon);
         stage.setResizable(false);
-        stage.setTitle("Duck Hunter!");
+        stage.setTitle("Square Hunter!");
 
     }
 
     public static void main(String[] args)
     {
+
         launch();
     }
 }

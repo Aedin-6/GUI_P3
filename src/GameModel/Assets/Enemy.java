@@ -1,20 +1,15 @@
 package GameModel.Assets;
 
-import javafx.animation.*;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
+import javafx.animation.FadeTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
-
 
 import java.util.ArrayList;
 
 public class Enemy
 {
-    public static ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
+    public static ArrayList<Enemy> enemyList = new ArrayList<>();
     private String id = "e";
     private int diff;
     private int lives;
@@ -22,14 +17,22 @@ public class Enemy
     private static int counter;
     private boolean isDead;
     private Color color;
+    private int leftOrRight;
 
     public Enemy(int diff)
     {
+        counter++;
         id = id + counter;
         isDead = false;
         view = AddView();
+        leftOrRight = (int) (Math.random() * 2);
+        if(leftOrRight == 1)
+        {
+            view.setX(view.getX()+2400);
+        }
         GetColorDiff(diff);
         Clicked();
+
     }
     public Enemy(boolean menu)
     {
@@ -69,7 +72,7 @@ public class Enemy
         rect.setHeight(30);
         rect.setFill(Color.DEEPSKYBLUE);
         rect.setX((int)(Math.random()*(-1200)));
-        rect.setY((int)(Math.random()*600));
+        rect.setY((int)(Math.random()*590));
         rect.setRotate((int)(Math.random()*360));
         rect.setStroke(Color.SKYBLUE);
         rect.setStrokeWidth(5);
@@ -103,22 +106,18 @@ public class Enemy
 
     public void Clicked()
     {
-        view.setOnMouseClicked(new EventHandler<MouseEvent>()
+        view.setOnMouseClicked(mouseEvent ->
         {
-            @Override
-            public void handle(MouseEvent mouseEvent)
-            {
-                lives= lives -1;
-                view.setFill(Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255)));
-                FadeTransition _fadeTransition = new FadeTransition(Duration.seconds(0.2), view);
-                _fadeTransition.setFromValue(1.0);
-                _fadeTransition.setToValue(0.0);
-                _fadeTransition.setAutoReverse(true);
-                _fadeTransition.setCycleCount(2);
-                _fadeTransition.play();
-                if(CheckDestroy())
-                    Destroy();
-            }
+            lives = lives - 1;
+            view.setFill(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+            FadeTransition _fadeTransition = new FadeTransition(Duration.seconds(0.2), view);
+            _fadeTransition.setFromValue(1.0);
+            _fadeTransition.setToValue(0.0);
+            _fadeTransition.setAutoReverse(true);
+            _fadeTransition.setCycleCount(2);
+            _fadeTransition.play();
+            if (CheckDestroy())
+                Destroy();
         });
 
     }
@@ -145,5 +144,10 @@ public class Enemy
     public void Kill()
     {
         isDead = true;
+    }
+
+    public int GetSide()
+    {
+        return leftOrRight;
     }
 }

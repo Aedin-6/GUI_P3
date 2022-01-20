@@ -2,15 +2,14 @@ package View;
 
 import GameModel.Assets.Enemy;
 import GameModel.Assets.Obstacle;
-import GameModel.Assets.Player;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
+import GameModel.GameFlow;
+import GameModel.TimeFlow;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -20,14 +19,11 @@ import java.io.FileInputStream;
 
 public class GameScene extends Scene
 {
-    //private Scene _scene;
-    private Text start;
     int difficulty;
     Pane pane;
-    Thread th;
-    Boolean over;
     Text gameOver = new Text();
     Stage stage;
+    public static MediaPlayer shotPlayer;
 
 
     public GameScene(Pane pane, int w, int h, int difficulty, Stage stage, Scene menuScene)
@@ -36,7 +32,8 @@ public class GameScene extends Scene
         this.pane = pane;
         this.stage = stage;
         this.difficulty = difficulty;
-        over = false;
+
+
         try
         {
             FileInputStream inputImg = new FileInputStream("forest.png");
@@ -49,20 +46,11 @@ public class GameScene extends Scene
             Background bGround = new Background(bImg);
             pane.setBackground(bGround);
         }
-        catch (Exception ex){}
+        catch (Exception ignored){}
 
-        for (int i = 0; i < 10+(difficulty*5); i++)
-        {
-            Enemy _enemy = new Enemy((int)(Math.random()*3));
-            pane.getChildren().add(_enemy.GetView());
-            Enemy.enemyList.add(_enemy);
-        }
-        for (int i = 0 ; i<100; i++)
-        {
-            Obstacle _obstacle = new Obstacle();
-            pane.getChildren().add(_obstacle.GetView());
-            Obstacle.obstacleList.add(_obstacle);
-        }
+        GenerateEnemies();
+        GenerateObstacles();
+
 
         Text score = new Text();
         score.setX(0 + (this.getWidth()/4));
@@ -83,120 +71,52 @@ public class GameScene extends Scene
         lives.setMouseTransparent(true);
         pane.getChildren().add(lives);
 
-        final KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN,
-                KeyCombination.SHIFT_ANY);
-        this.setOnKeyPressed(keyEvent ->
-        {
-            if (keyComb1.match(keyEvent))
-            {
-                over = true;
-                Enemy.enemyList.clear();
-                Obstacle.obstacleList.clear();
-                Player.ClearScore();
-                Player.ClearLives();
-                stage.setScene(menuScene);
-            }
-        });
+        Text time = new Text();
+        time.setX(0);
+        time.setY(50);
+        time.setFont(new Font("Times New Roman", 40));
+        time.setFill(Color.BLACK);
+        time.setVisible(true);
+        time.setMouseTransparent(true);
+        pane.getChildren().add(time);
 
 
         Image kursor = new Image("kursor.png");
         ImageCursor cursor = new ImageCursor(kursor, kursor.getWidth()/2, kursor.getHeight()/2);
         this.setCursor(cursor);
 
-        Runnable neww = () ->
+        GameFlow gameFlow = new GameFlow(score,lives,gameOver,this, menuScene,stage,difficulty);
+        Thread gfThread = new Thread(gameFlow);
+        gfThread.start();
+
+        TimeFlow timeFlow = new TimeFlow(time);
+        Thread tfThread = new Thread(timeFlow);
+        tfThread.start();
+
+        Media shotMusic = new Media(getClass().getResource("/shot.mp3").toExternalForm());
+        this.setOnMouseClicked(mouseEvent ->
         {
-            try {
-                while (!over) {
-                    Thread.sleep(20);
-                    Platform.runLater(() ->
-                    {
-                        updateEnemy();
-                        updateBlocker();
-                        score.setText("Score: " + Player.GetScore());
-                        lives.setText("Lives: " + Player.GetLives());
-                        if(Player.GetLives() <= 0 && !isOver() || ifAllKilled())
-                        {
-                            GameOver();
-                        }
-                    });
-                }
-            } catch (InterruptedException ex) {
-                System.out.println("Interrupted");
-            }
-        };
-
-        th = new Thread(neww);
-        th.start();
-    }
-
-    private boolean ifAllKilled()
-    {
-        boolean allDead = false;
-        int counter=0;
-        for (Enemy en: Enemy.enemyList)
-        {
-            if(en.CheckDead())
-                counter++;
-        }
-        if (counter == Enemy.enemyList.size())
-            allDead = true;
-        return allDead;
-    }
-
-    private boolean isOver()
-    {
-        return over;
-    }
-
-    private void GameOver()
-    {
-        gameOver.setX(this.getWidth()/3);
-        gameOver.setY(this.getHeight()/3);
-        gameOver.setFont(new Font("Times New Roman", 60));
-        gameOver.setText(" GAME OVER!\nClick to continue.");
-        gameOver.setFill(Color.BLACK);
-        gameOver.setVisible(true);
-        over = true;
-        gameOver.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent mouseEvent)
-            {
-                Group scorePane = new Group();
-                ScoresScene scoresScene = new ScoresScene(scorePane, 300,500, true);
-                Image icon = new Image("duck.jpg");
-                stage.getIcons().add(icon);
-                stage.setResizable(false);
-                stage.setTitle("Duck Hunter!");
-                stage.setScene(scoresScene);
-            }
+            shotPlayer = new MediaPlayer(shotMusic);
+            shotPlayer.setVolume(0.4);
+            shotPlayer.setAutoPlay(true);
         });
     }
-
-
-    private void updateBlocker()
+    private void GenerateEnemies()
     {
-        for (Obstacle o: Obstacle.obstacleList)
+        for (int i = 0; i < 10+(difficulty*10); i++)
         {
-            o.GetView().setCenterY(o.GetView().getCenterY()+1);
-            if(o.GetView().getCenterY()-o.GetView().getRadius() > this.getHeight())
-                o.GetView().setCenterY((int)(Math.random()*(-this.getHeight())));
+            Enemy _enemy = new Enemy((int)(Math.random()*3));
+            pane.getChildren().add(_enemy.GetView());
+            Enemy.enemyList.add(_enemy);
         }
     }
-
-    private void updateEnemy()
+    private void GenerateObstacles()
     {
-        for (Enemy e: Enemy.enemyList)
+        for (int i = 0 ; i<100; i++)
         {
-            e.GetView().setX(e.GetView().getX()+difficulty+1);
-            e.GetView().setRotate(e.GetView().getRotate() + 1);
-
-            if (e.GetView().getX() > this.getWidth() && !e.CheckDead())
-            {
-                Player.LoseLife();
-                e.GetView().setX((int) (Math.random()*-300));
-                e.GetView().setY((int) (Math.random()*1200));
-            }
+            Obstacle _obstacle = new Obstacle();
+            pane.getChildren().add(_obstacle.GetView());
+            Obstacle.obstacleList.add(_obstacle);
         }
     }
 }

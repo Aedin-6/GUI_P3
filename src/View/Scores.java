@@ -6,6 +6,7 @@ public class Scores implements Serializable
 {
     String nickname;
     String score;
+    String time;
 
     public void setNickname(String nickname)
     {
@@ -27,9 +28,21 @@ public class Scores implements Serializable
         return score;
     }
 
-    Scores(String nickname, String score)
+    public void setTime(String time)
+    {
+        this.time = time;
+    }
+
+    public String getTime()
+    {
+        return time;
+    }
+
+
+    Scores(String nickname, String score, String time)
     {
         this.nickname = nickname;
         this.score = score;
+        this.time = time;
     }
 }
