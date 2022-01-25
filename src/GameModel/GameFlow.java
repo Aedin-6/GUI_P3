@@ -99,10 +99,10 @@ public class GameFlow implements Runnable
         {
             Group scorePane = new Group();
             ScoresScene scoresScene = new ScoresScene(scorePane, 325,500, true);
-            Image icon = new Image("square.jpg");
+            Image icon = new Image("file:duck.png");
             stage.getIcons().add(icon);
             stage.setResizable(false);
-            stage.setTitle("Square Hunter!");
+            stage.setTitle("Duck Hunter!");
             stage.setScene(scoresScene);
         });
     }
@@ -112,9 +112,9 @@ public class GameFlow implements Runnable
     {
         for (Obstacle o: Obstacle.obstacleList)
         {
-            o.GetView().setCenterY(o.GetView().getCenterY()+1);
-            if(o.GetView().getCenterY()-o.GetView().getRadius() > scene.getHeight())
-                o.GetView().setCenterY((int)(Math.random()*(-scene.getHeight())));
+            o.GetImg().setY(o.GetImg().getY()+1);
+            if(o.GetImg().getY()-o.GetImg().getFitHeight() > scene.getHeight())
+                o.GetImg().setY((int)(Math.random()*(-scene.getHeight())));
         }
     }
 
@@ -125,26 +125,24 @@ public class GameFlow implements Runnable
         {
             if(e.GetSide() == 0)
             {
-                e.GetView().setX(e.GetView().getX() + (difficulty/3.0) + 1);
-                e.GetView().setRotate(e.GetView().getRotate() + 1);
+                e.GetImg().setX(e.GetImg().getX() + (difficulty/3.0) + 1);
 
-                if (e.GetView().getX() > scene.getWidth() && !e.CheckDead())
+                if (e.GetImg().getX() > scene.getWidth() && !e.CheckDead())
                 {
                     Player.LoseLife();
-                    e.GetView().setX((int) (Math.random() * -600));
-                    e.GetView().setY((int) (Math.random() * 590));
+                    e.GetImg().setX((int) (Math.random() * -600));
+                    e.GetImg().setY((int) (Math.random() * 590));
                 }
             }
             else
             {
-                e.GetView().setX(e.GetView().getX() - (difficulty/3.0) - 1);
-                e.GetView().setRotate(e.GetView().getRotate() - 1);
+                e.GetImg().setX(e.GetImg().getX() - (difficulty/3.0) - 1);
 
-                if (e.GetView().getX() < -25 && !e.CheckDead())
+                if (e.GetImg().getX() < -25 && !e.CheckDead())
                 {
                     Player.LoseLife();
-                    e.GetView().setX((int) (Math.random() * (1800 - 1200) + 1200));
-                    e.GetView().setY((int) (Math.random() * 590));
+                    e.GetImg().setX((int) (Math.random() * (1800 - 1200) + 1200));
+                    e.GetImg().setY((int) (Math.random() * 590));
                 }
             }
         }

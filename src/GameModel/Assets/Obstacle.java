@@ -1,13 +1,14 @@
 package GameModel.Assets;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import java.util.ArrayList;
 
 public class Obstacle
 {
     public static ArrayList<Obstacle> obstacleList = new ArrayList<>();
-    private Circle view;
+    private ImageView img;
     private String id = "o";
     private static int counter;
 
@@ -15,45 +16,47 @@ public class Obstacle
     {
         counter++;
         id = id + counter;
-        view = AddView();
+        img = AddImg();
     }
     public Obstacle(boolean menu)
     {
         id = id + counter;
-        view = AddDiffMenuView();
+        img = AddMenuImg();
     }
 
-    private Circle AddView()
+
+    private ImageView AddMenuImg()
     {
-        Circle circle = new Circle();
-        circle.setCenterY((int)(Math.random()*(1000)));
-        circle.setCenterX((int)(Math.random()*1200));
-        circle.setRadius(30);
-        circle.setFill(Color.rgb(204,0,0));
-        circle.setStroke(Color.ORANGERED);
-        circle.setStrokeWidth(10);
-        circle.setOpacity(0.8);
-        circle.toFront();
+        ImageView obstacle = new ImageView();
+        obstacle.setImage(new Image("file:cloud-icon.png"));
+        obstacle.setFitHeight(75);
+        obstacle.setFitWidth(75);
+        obstacle.toFront();
+        obstacle.setMouseTransparent(true);
+        obstacle.setY((int)(Math.random()*(300)));
+        obstacle.setX((int)(Math.random()*(-600)));
+        obstacle.toFront();
+        obstacle.setMouseTransparent(true);
 
-        return circle;
+        return obstacle;
     }
-    private Circle AddDiffMenuView()
+
+    private ImageView AddImg()
     {
-        Circle circle = new Circle();
-        circle.setCenterY((int)(Math.random()*(300)));
-        circle.setCenterX((int)(Math.random()*600));
-        circle.setRadius(10);
-        circle.setFill(Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255)));
-        circle.setStroke(Color.ORANGERED);
-        circle.setStrokeWidth(2);
-        circle.toFront();
-        circle.setMouseTransparent(true);
+        ImageView obstacle = new ImageView();
+        obstacle.setImage(new Image("file:cloud-icon.png"));
+        obstacle.setFitHeight(75);
+        obstacle.setFitWidth(75);
+        obstacle.toFront();
+        obstacle.setMouseTransparent(true);
+        obstacle.setY((int)(Math.random()*(1000)));
+        obstacle.setX((int)(Math.random()*1200));
+        obstacle.setOpacity(0.8);
+        obstacle.toFront();
+        obstacle.setMouseTransparent(true);
 
-        return circle;
+        return obstacle;
     }
 
-    public Circle GetView()
-    {
-        return view;
-    }
+    public ImageView GetImg() { return img;}
 }

@@ -5,13 +5,11 @@ import View.GameScene;
 import View.ScoresScene;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -24,7 +22,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class Main extends Application
@@ -251,7 +248,7 @@ public class Main extends Application
         for (int i = 0; i <30; i++)
         {
             Enemy _enemy = new Enemy(true);
-            pane.getChildren().add(_enemy.GetView());
+            pane.getChildren().add(_enemy.GetImg());
             enemyMenuList.add(_enemy);
         }
     }
@@ -261,7 +258,7 @@ public class Main extends Application
         for (int i = 0 ; i<30; i++)
         {
             Obstacle _obstacle = new Obstacle(true);
-            diffPane.getChildren().add(_obstacle.GetView());
+            diffPane.getChildren().add(_obstacle.GetImg());
             menuBlockerList.add(_obstacle);
         }
     }
@@ -270,10 +267,10 @@ public class Main extends Application
     {
         for (Enemy e: enemyMenuList)
         {
-            e.GetView().setY(e.GetView().getY()+1);
-            e.GetView().setOpacity(0.5);
-            if(e.GetView().getY()-e.GetView().getHeight() > scene.getHeight())
-                e.GetView().setY((int)(Math.random()*(-scene.getHeight())));
+            e.GetImg().setY(e.GetImg().getY()+1);
+            e.GetImg().setOpacity(0.5);
+            if(e.GetImg().getY()-e.GetImg().getFitHeight() > scene.getHeight())
+                e.GetImg().setY((int)(Math.random()*(-scene.getHeight())));
         }
     }
 
@@ -281,10 +278,10 @@ public class Main extends Application
     {
         for (Obstacle o: menuBlockerList)
         {
-            o.GetView().setCenterX(o.GetView().getCenterX()+1);
-            o.GetView().setOpacity(0.6);
-            if(o.GetView().getCenterX()-o.GetView().getRadius() > scene.getWidth())
-                o.GetView().setCenterX(0);
+            o.GetImg().setX(o.GetImg().getX()+1);
+            o.GetImg().setOpacity(0.6);
+            if(o.GetImg().getX()-o.GetImg().getFitHeight() > scene.getWidth())
+                o.GetImg().setX(0);
         }
     }
 
@@ -292,10 +289,10 @@ public class Main extends Application
 
     private void StageSetter(Stage stage)
     {
-        Image icon = new Image("square.jpg");
+        Image icon = new Image("file:duck.png");
         stage.getIcons().add(icon);
         stage.setResizable(false);
-        stage.setTitle("Square Hunter!");
+        stage.setTitle("Duck Hunter!");
 
     }
 

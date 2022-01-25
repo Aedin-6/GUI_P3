@@ -1,8 +1,5 @@
 package GameModel.Assets;
 
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-
 public class Player
 {
     private static int lives = 10;
@@ -33,17 +30,17 @@ public class Player
         return lives;
     }
 
-    public static void IncreaseScore(Paint color)
+    public static void IncreaseScore(int color)
     {
-        if (Color.RED == color)
+        if (color == 2)
         {
             score = score + 15;
         }
-        else if (Color.DEEPSKYBLUE == color)
+        else if (color == 0)
         {
             score = score +5;
         }
-        else if (Color.YELLOWGREEN == color)
+        else if (color == 1)
         {
             score = score +10;
         }

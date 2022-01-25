@@ -23,7 +23,7 @@ public class GameScene extends Scene
     Pane pane;
     Text gameOver = new Text();
     Stage stage;
-    public static MediaPlayer shotPlayer;
+    MediaPlayer shotPlayer;
 
 
     public GameScene(Pane pane, int w, int h, int difficulty, Stage stage, Scene menuScene)
@@ -106,7 +106,7 @@ public class GameScene extends Scene
         for (int i = 0; i < 10+(difficulty*10); i++)
         {
             Enemy _enemy = new Enemy((int)(Math.random()*3));
-            pane.getChildren().add(_enemy.GetView());
+            pane.getChildren().add(_enemy.GetImg());
             Enemy.enemyList.add(_enemy);
         }
     }
@@ -115,7 +115,7 @@ public class GameScene extends Scene
         for (int i = 0 ; i<100; i++)
         {
             Obstacle _obstacle = new Obstacle();
-            pane.getChildren().add(_obstacle.GetView());
+            pane.getChildren().add(_obstacle.GetImg());
             Obstacle.obstacleList.add(_obstacle);
         }
     }
