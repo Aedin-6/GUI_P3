@@ -85,7 +85,7 @@ public class ScoresScene extends Scene implements Serializable
         {
             scores.add(new Scores(addNickname.getText(), addScore.getText(), addTime.getText()));
             addNickname.clear();
-            addBtn.setDisable(true);
+            //addScore.clear();
         });
 
         Button saveAndExitBtn = new Button("Save & Exit");

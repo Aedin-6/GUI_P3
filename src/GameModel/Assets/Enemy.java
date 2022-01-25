@@ -20,12 +20,12 @@ public class Enemy
     private int leftOrRight;
     private MediaPlayer quackPlayer;
 
-    public Enemy(int diff)
+    public Enemy(int color)
     {
         counter++;
         id = id + counter;
         isDead = false;
-        color = ((int) (Math.random() * 3));
+        this.color = color;
         img = AddImg();
         leftOrRight = (int) (Math.random() * 2);
         if(leftOrRight == 1)
@@ -41,7 +41,7 @@ public class Enemy
             img.setFitHeight(70);
         }
 
-        GetColorDiff(diff);
+        GetColorDiff(color);
         Clicked();
 
     }

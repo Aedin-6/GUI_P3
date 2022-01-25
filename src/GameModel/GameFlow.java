@@ -131,7 +131,7 @@ public class GameFlow implements Runnable
                 {
                     Player.LoseLife();
                     e.GetImg().setX((int) (Math.random() * -600));
-                    e.GetImg().setY((int) (Math.random() * 590));
+                    e.GetImg().setY((int) (Math.random() * 560));
                 }
             }
             else

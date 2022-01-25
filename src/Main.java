@@ -197,7 +197,7 @@ public class Main extends Application
         Media bgMusic = new Media(getClass().getResource("backgroundMusic.mp3").toExternalForm());
         bgMusicPlayer = new MediaPlayer(bgMusic);
         bgMusicPlayer.setAutoPlay(true);
-        bgMusicPlayer.setOnRepeat(() -> bgMusicPlayer.seek(Duration.ZERO));
+        bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         bgMusicPlayer.setVolume(0.7);
         soundOn = true;
     }
